@@ -1,22 +1,24 @@
 #include "PFC_1ph_ADC.h"
 
-uint16_t AC_Offset;
+uint16_t AC_Offset[2];
 Sample_Typedef ADC_Sample;
 
 bool AC_Offset_Get()
 {
     static int add_num = 0;
-    static int sum_v = 0;
+    static int sum_v[2] = {0,0};
     bool flag;
-    if(add_num < Tnum)
+    if(add_num < Tnum*6)
     {
-        sum_v += ADC_Sample.ADC_Raw_Value[0];
+        sum_v[0] += ADC_Sample.ADC_Raw_Value[0];
+        sum_v[1] += ADC_Sample.ADC_Raw_Value[1];
         add_num++;
         flag =  false;
     }
-    else if(add_num >= Tnum)
+    else if(add_num >= Tnum*6)
     {
-        AC_Offset = sum_v / Tnum;
+        AC_Offset[0] = sum_v[0] / Tnum/6;
+        AC_Offset[1] = sum_v[1] / Tnum/6;
         flag = true;
     }
     return flag;
@@ -24,6 +26,8 @@ bool AC_Offset_Get()
 
 void ADC_Conversion()
 {
-    ADC_Sample.Bus_Volt    = (ADC_Sample.ADC_Raw_Value[0] + AC_Offset)*Kraw;
-    ADC_Sample.Bus_Current = (ADC_Sample.ADC_Raw_Value[2]);
+    //TogglePin_C13;
+    ADC_Sample.Bus_Volt    = (ADC_Sample.ADC_Raw_Value[0] - AC_Offset[0])*Kraw*Kac;
+    ADC_Sample.Bus_Current = (ADC_Sample.ADC_Raw_Value[1] - AC_Offset[1])*Kraw*Kac;
+    //TogglePin_C13;
 }

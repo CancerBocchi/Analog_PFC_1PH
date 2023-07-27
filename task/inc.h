@@ -14,6 +14,7 @@
 #include "OLEDUI.h"
 #include "oled.h"
 #include "keyboard.h"
+#include "SEGGER_RTT.h"
 
 /*标准库模块*/
 #include "math.h"

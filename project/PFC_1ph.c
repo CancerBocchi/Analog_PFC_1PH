@@ -14,7 +14,7 @@ void Project_Init()
 {
     //初始化结构体
     POWER_MEAS_SINE_ANALYZER_reset(&AC_Analyzer);
-    POWER_MEAS_SINE_ANALYZER_config(&AC_Analyzer,HRTIM_IT_FRE,
+    POWER_MEAS_SINE_ANALYZER_config(&AC_Analyzer,PowerMea_Fre,
                                              0,INPUT_AC_FRE+5.0f,
                                              INPUT_AC_FRE-5.0f);
     SPLL_1PH_SOGI_reset(&SPLL_Data);
@@ -29,7 +29,7 @@ void Project_Init()
 
     //标志位初始化
     Contrarian_Bridge_State = OFF;
-
+    System_State = System_Init;
     
 }
 
@@ -46,8 +46,10 @@ void InternalACGenerater()
 
 bool Spll_Run(float Acwave)
 {
+    bool result;
     SPLL_1PH_SOGI_run(&SPLL_Data,Acwave);
-    return SPLL_Data.u_Q[0] < 0.05 ? false : true;
+    result = SPLL_Data.u_Q[0] < 0.05 ? true : false;
+    return result;
 }
 
 void Ac_Analyser_Run(float i, float v)

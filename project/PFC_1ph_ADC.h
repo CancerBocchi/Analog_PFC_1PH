@@ -5,10 +5,10 @@
 
 #define Uref      3.0f
 #define ADC_Bits  4096.0f
-#define Kac       1.0f
+#define Kac       112.45f
 #define Kraw      Uref/ADC_Bits
 
-#define Tnum      200
+#define Tnum     400
 
 typedef struct 
 {
@@ -18,7 +18,7 @@ typedef struct
 }Sample_Typedef;
 
 extern Sample_Typedef ADC_Sample;
-extern uint16_t AC_Offset;
+extern uint16_t AC_Offset[2];
 
 bool AC_Offset_Get();
 void ADC_Conversion();

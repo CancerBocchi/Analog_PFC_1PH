@@ -2,6 +2,7 @@
 #define __MYLIB__
 
 //#include "adc.h"
+//#include "tim.h"
 #include "stdint.h"
 #include "stdio.h"
 #include "string.h"
@@ -17,6 +18,14 @@
 #define Euler 2.7182818284590452f
 #define FACTOR_ADC 0.8056640625//adc转换成电压值的系数 单位为mv
 #define FAIL -1
+
+#define FLOAT_PRINTF(value) (int)(value*1000.0f)
+
+#ifdef __TIM_H__
+#define TIMER htim1
+#endif
+
+#define TogglePin_C13 HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13)
 
 #ifdef __cplusplus
 extern "C"{

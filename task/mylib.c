@@ -20,9 +20,10 @@ _Bool Cancer_JudgeKey_LTH(GPIO_TypeDef *Port,uint16_t Pin)
 		tick = HAL_GetTick();
 		flag = 0;
 	}
-	if(HAL_GPIO_ReadPin(Port,Pin))
+	int a = HAL_GPIO_ReadPin(Port,Pin);
+	if(a)
 	{
-		if(HAL_GetTick() - tick > 200)
+		if(HAL_GetTick() - tick > 1000)
 		{
 			return true;
 		}

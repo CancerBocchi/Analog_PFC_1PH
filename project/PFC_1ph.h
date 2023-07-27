@@ -26,11 +26,14 @@ extern Mode_Switch               Contrarian_Bridge_State;
 
 extern float  Internal_SineSignal;
 extern bool   SPLL_Flag;
+extern spwm   spwmmod;
 
 void Project_Init();
 bool Spll_Run(float Acwave);
 void InternalACGenerater();
 void Contrarian_Bridge_Switch(bool OnOff);
 void Ac_Analyser_Run(float i, float v);
+void AC_Lab1();
+void AC_Lab2();
 
 #endif
