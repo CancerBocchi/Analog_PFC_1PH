@@ -142,18 +142,23 @@ void OLED_Clear(void)
 	for (i = 0; i < 8; i++)
 	{
 		OLED_WriteAdd(i+0xb0);//设置页地址（0~7）
+#if Screen_Type == ST7567  
 		OLED_WriteAdd(((0x00&0xf0)>>4)|0x10);//设置显示位置—列低地址
 		OLED_WriteAdd((0x00&0x0f)|0x00);//设置显示位置—列高地址
+#elif Screen_Type == SH1106
+		OLED_WriteAdd(0x01);	 // 设置显示位置—列低地址
+		OLED_WriteAdd(0x10);	 // 设置显示位置—列高地址
+#endif
 		for (n = 0; n < 128; n++)
 		{
-			OLED_WriteData(0xff);
+			OLED_WriteData(0x00);
 		}
 	}
 }
 
 void OLED_Init(void)
 {
-
+#if Screen_Type == ST7567 
 	__HAL_SPI_ENABLE(&hspi1);
 	OLED_CS_CLR;
 	OLED_Reset();//硬复位
@@ -179,6 +184,53 @@ void OLED_Init(void)
     OLED_WriteAdd(0xf8);//背压比设置
     OLED_WriteAdd(0x00);//00--10
 	OLED_Clear();//清屏
+
+#elif Screen_Type == SH1106 
+
+	OLED_CS_CLR;
+	OLED_Reset();
+
+	// OLED_WriteData(0x00);
+
+	OLED_WriteAdd(0xAE); // set display display ON/OFF,AFH/AEH
+	OLED_WriteAdd(0x20);
+	OLED_WriteAdd(0x01);
+	// set display start line:COM0
+	OLED_WriteAdd(0x40);
+	OLED_WriteAdd(0xB0);
+	// 亮度设置
+	OLED_WriteAdd(0x81);
+	OLED_WriteAdd(0xFF); // 该数字越大，OLED越亮
+
+	OLED_WriteAdd(0xA0); // entire display on: A4H:OFF/A5H:ON
+	OLED_WriteAdd(0xC0); // 该指令控制显示方向显示方向0xc8或者0xc0
+	// OLED_WriteAdd(0xC0);
+
+	OLED_WriteAdd(0xA8); // set multiplex ratio
+	OLED_WriteAdd(0x3F); // 1/64duty
+	OLED_WriteAdd(0xD3); // set display offset
+	OLED_WriteAdd(0x00); //
+	OLED_WriteAdd(0xD5); // set display clock divide ratio/oscillator frequency
+	OLED_WriteAdd(0x80); // 105Hz
+	OLED_WriteAdd(0xD9); // Dis-charge /Pre-charge Period Mode Set
+	OLED_WriteAdd(0xF1); //
+	OLED_WriteAdd(0xDA); // Common Pads Hardware Configuration Mode Set
+	OLED_WriteAdd(0x12); //
+	OLED_WriteAdd(0xDB); // set vcomh deselect level
+	OLED_WriteAdd(0x40); // VCOM = β X VREF = (0.430 + A[7:0] X 0.006415) X VREF
+	OLED_WriteAdd(0xA4);
+	OLED_WriteAdd(0xA6);
+	OLED_WriteAdd(0xAF); // set display display ON/OFF,AEH/AFH
+
+	OLED_WriteAdd(0xAF);
+	OLED_WriteAdd(0xA6); // set normal/inverse display: 0xA6:正显/0xA7:反显
+
+	OLED_Clear();
+	OLED_WriteAdd(0xb0); // 设置页
+	OLED_WriteAdd(0x10); // 设置列的显示位置的高位
+	OLED_WriteAdd(0x01); // 低位
+
+#endif
 }
 
 // void OLED_Show_Number_16(uint8_t x,uint8_t  y,uint8_t  number )

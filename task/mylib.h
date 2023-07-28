@@ -26,6 +26,8 @@
 #endif
 
 #define TogglePin_C13 HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13)
+#define C13_HIGH      HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,1)
+#define C13_LOW       HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,0)
 
 #ifdef __cplusplus
 extern "C"{

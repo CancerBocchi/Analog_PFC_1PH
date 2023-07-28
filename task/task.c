@@ -9,14 +9,14 @@ spwm spwmmod;
 /*task init*/
 void Task_Init()
 {
-    //    Project_Init();
+    Project_Init();
     //Contrarian_Bridge_Switch(ON);
 }
 
 /*task do*/
 void Task_Do()
 {
-    
+    OLED_Screen();
 }
 
 /*IT Function*/

@@ -10,6 +10,10 @@
 #define OLED_RST_CLR  HAL_GPIO_WritePin(RES_GPIO_Port, RES_Pin, RESET)
 #define OLED_RST_SET  HAL_GPIO_WritePin(RES_GPIO_Port, RES_Pin, SET)
 
+#define ST7567  1
+#define SH1106 0
+//更改以下的值来选择性编译
+#define Screen_Type       ST7567
 
 void OLED_Reset(void);
 void OLED_Init(void);

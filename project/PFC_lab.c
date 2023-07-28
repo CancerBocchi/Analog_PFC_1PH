@@ -14,10 +14,12 @@ void PFC_KeyboardControll()
                 case 1:
                     if(PF_angle < 90)
                         PF_angle += 1;
+                        C13_HIGH;
                     break;
                 case 2:
                     if(PF_angle < 90)
                         PF_angle -= 1;
+                        C13_LOW;
                     break;
                 case 3:
 
@@ -121,15 +123,11 @@ void AC_Lab3()
     //确认是否锁相成功
     //
     if(Spll_Run(ADC_Sample.Bus_Volt))
-    {
         SPLL_Flag = SPLL_OK;
-        HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,1);
-    }
+    
     else
-    {
         SPLL_Flag = SPLL_NO;
-        HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,0);
-    }
+    
     SEGGER_RTT_printf(0,"%d\n",FLOAT_PRINTF(ADC_Sample.Bus_Current));
 
     //

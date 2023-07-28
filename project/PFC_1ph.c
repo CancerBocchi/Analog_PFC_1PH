@@ -25,6 +25,7 @@ void Project_Init()
                             SPLL_B0,SPLL_B1);
 
     SPWM_Init(&SPWM_Mode,INPUT_AC_FRE,HRTIM_IT_FRE,MasterTimer);
+    OLED_Init();
     
     //开启外设
     HAL_HRTIM_WaveformCounterStart(&hhrtim1,HRTIM_TIMERID_TIMER_A);

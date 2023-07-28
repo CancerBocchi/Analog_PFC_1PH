@@ -35,7 +35,9 @@ bool Spll_Run(float Acwave);
 void InternalACGenerater();
 void Contrarian_Bridge_Switch(bool OnOff);
 void Ac_Analyser_Run(float i, float v);
+void PFC_OLEDUI_Design();
 void AC_Lab1();
 void AC_Lab2();
+void AC_Lab3();
 
 #endif
