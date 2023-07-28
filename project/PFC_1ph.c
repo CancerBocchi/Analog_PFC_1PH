@@ -7,8 +7,11 @@ spwm                      SPWM_Mode;
 System_Flag               System_State;
 Mode_Switch               Contrarian_Bridge_State;
 
-float  Internal_SineSignal;
-bool   SPLL_Flag;
+bool      SPLL_Flag;
+float     Internal_SineSignal;
+uint16_t  PF_angle;
+float     PF_theta;
+
 
 void Project_Init()
 {
@@ -24,8 +27,11 @@ void Project_Init()
     SPWM_Init(&SPWM_Mode,INPUT_AC_FRE,HRTIM_IT_FRE,MasterTimer);
     
     //开启外设
+    HAL_HRTIM_WaveformCounterStart(&hhrtim1,HRTIM_TIMERID_TIMER_A);
+    HAL_HRTIM_WaveformCounterStart(&hhrtim1,HRTIM_TIMERID_TIMER_B);
     HAL_HRTIM_WaveformCounterStart_IT(&hhrtim1,HRTIM_TIMERID_MASTER);
     HAL_ADC_Start_DMA(&hadc1,(uint32_t*)ADC_Sample.ADC_Raw_Value,3);
+    HAL_TIM_Base_Start(&htim1);
 
     //标志位初始化
     Contrarian_Bridge_State = OFF;

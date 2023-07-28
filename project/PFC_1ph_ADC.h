@@ -1,14 +1,7 @@
 #ifndef __PFC_1ph_H__
 #define __PFC_1ph_H__
 
-#include "PFC_1ph.h"
-
-#define Uref      3.0f
-#define ADC_Bits  4096.0f
-#define Kac       112.45f
-#define Kraw      Uref/ADC_Bits
-
-#define Tnum     400
+#include "PFC_1ph.h"   
 
 typedef struct 
 {

@@ -43,7 +43,7 @@ int keyboard_scan()
  * @brief 执行函数 switch语句中填写需要的内容
  * 
  */
-void keyboard_execute()
+void keyboard_execute_Systick()
 {
     static int KeyBoard_Tick = 0;
     KeyBoard_Num = keyboard_scan();
@@ -109,3 +109,6 @@ void keyboard_execute()
         }
     }
 }
+
+
+

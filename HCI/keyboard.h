@@ -67,7 +67,7 @@ typedef struct KB
 
 }keyboard_pin;
 
-void keyboard_execute();
+void keyboard_execute_Systick();
 int keyboard_scan();
 
 #endif

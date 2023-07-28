@@ -9,12 +9,7 @@ spwm spwmmod;
 /*task init*/
 void Task_Init()
 {
-//    Project_Init();
-    SPWM_Init(&spwmmod,50,20000,MasterTimer);
-    HAL_HRTIM_WaveformCountStart_IT(&hhrtim1,HRTIM_TIMERID_MASTER);
-    HAL_HRTIM_WaveformCountStart(&hhrtim1,HRTIM_TIMERID_TIMER_A);
-    HAL_HRTIM_WaveformCountStart(&hhrtim1,HRTIM_TIMERID_TIMER_B);
-    HAL_HRTIM_WaveformOutputStart(&hhrtim1,HRTIM_OUTPUT_TA1);
+    //    Project_Init();
     //Contrarian_Bridge_Switch(ON);
 }
 

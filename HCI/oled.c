@@ -141,9 +141,9 @@ void OLED_Clear(void)
 
 	for (i = 0; i < 8; i++)
 	{
-		OLED_WriteAdd(i + 0xb0); // 设置页地址（0~7）
-		OLED_WriteAdd(0x01);	 // 设置显示位置—列低地址
-		OLED_WriteAdd(0x10);	 // 设置显示位置—列高地址
+		OLED_WriteAdd(i+0xb0);//设置页地址（0~7）
+		OLED_WriteAdd(((0x00&0xf0)>>4)|0x10);//设置显示位置—列低地址
+		OLED_WriteAdd((0x00&0x0f)|0x00);//设置显示位置—列高地址
 		for (n = 0; n < 128; n++)
 		{
 			OLED_WriteData(0xff);
@@ -153,94 +153,32 @@ void OLED_Clear(void)
 
 void OLED_Init(void)
 {
+
+	__HAL_SPI_ENABLE(&hspi1);
 	OLED_CS_CLR;
-	OLED_Reset();
+	OLED_Reset();//硬复位
+	HAL_Delay(5);
 
-	// // OLED_WriteData(0x00);
+    OLED_WriteAdd(0xe2);//软复位
 
-OLED_WriteAdd(0xAE); // set display display ON/OFF,AFH/AEH
-	OLED_WriteAdd(0x20);
-	OLED_WriteAdd(0x01);
-	// set display start line:COM0
-	OLED_WriteAdd(0x40);
-	OLED_WriteAdd(0xB0);
-	// 亮度设置
-	OLED_WriteAdd(0x81);
-	OLED_WriteAdd(0xFF); // 该数字越大，OLED越亮
+    OLED_WriteAdd(0xaf);//0xaf显示器开
+    OLED_WriteAdd(0x2f);//0x2f升压电路,电压管理电路,
+	   	   
+    OLED_WriteAdd(0x25);//0x20-0x27为V5电压内部电阻调整设置 
 
-	OLED_WriteAdd(0xA0); // entire display on: A4H:OFF/A5H:ON
-	OLED_WriteAdd(0xC0); // 该指令控制显示方向显示方向0xc8或者0xc0
-	// OLED_WriteAdd(0xC0);
+    OLED_WriteAdd(0x81);// SET EV 调对比度
+    OLED_WriteAdd(0x18);//0x01-0x3f电量寄存器设置模式
 
-	OLED_WriteAdd(0xA8); // set multiplex ratio
-	OLED_WriteAdd(0x3F); // 1/64duty
-	OLED_WriteAdd(0xD3); // set display offset
-	OLED_WriteAdd(0x00); //
-	OLED_WriteAdd(0xD5); // set display clock divide ratio/oscillator frequency
-	OLED_WriteAdd(0x80); // 105Hz
-	OLED_WriteAdd(0xD9); // Dis-charge /Pre-charge Period Mode Set
-	OLED_WriteAdd(0xF1); //
-	OLED_WriteAdd(0xDA); // Common Pads Hardware Configuration Mode Set
-	OLED_WriteAdd(0x12); //
-	OLED_WriteAdd(0xDB); // set vcomh deselect level
-	OLED_WriteAdd(0x40); // VCOM = β X VREF = (0.430 + A[7:0] X 0.006415) X VREF
-	OLED_WriteAdd(0xA4);
-	OLED_WriteAdd(0xA6);
-	OLED_WriteAdd(0xAF); // set display display ON/OFF,AEH/AFH
+    OLED_WriteAdd(0xa1);//0xa0为Segment正向,0xa1 为Segment反向
+	   	   
+    OLED_WriteAdd(0xc0);//0xc0正向扫描,0xc8反射扫描
 
-	OLED_WriteAdd(0xAF);
-	OLED_WriteAdd(0xA6); // set normal/inverse display: 0xA6:正显/0xA7:反显
+    OLED_WriteAdd(0xa6);//0xa6正向显示,0xa7反向显示
+    OLED_WriteAdd(0xa4);//0xa4正常显示,0xa5全屏点亮
 
-	OLED_Clear();
-	OLED_WriteAdd(0xb0); // 设置页
-	OLED_WriteAdd(0x10); // 设置列的显示位置的高位
-	OLED_WriteAdd(0x01); // 低位
-
-	// OLED_WriteAdd(0xAE);	//关显示
-
-	// OLED_WriteAdd(0x02);	//设置列地址低四位（00-0F）。（0 0 0 0 A3 A2 A1 A0）
-	// OLED_WriteAdd(0x10);	//设置列地址高四位（10-1F）。（0 0 0 1 A7 A6 A5 A4）
-
-	// OLED_WriteAdd(0x40);	//指定起始行地址（40-7F），共64行（每行一像素）
-	// OLED_WriteAdd(0xB0);	//指定起始页地址（B0-B7），共8页（每页8像素）
-
-	// OLED_WriteAdd(0x81);	//启用对比度数据寄存器。双字节命令。
-	// OLED_WriteAdd(0xCF);	//对比度设置（00-FF），共256个级别。设置完对比度数据后，对比度数据寄存器自动释放。
-
-	// OLED_WriteAdd(0xA1);	//A1：正常显示，A0：水平反转显示。当显示数据被写入或读取时，列地址增加1。
-	// OLED_WriteAdd(0xC8);	//C0-C7：正常显示，C8-CF：垂直翻转。设置公共输出扫描方向。
-	// OLED_WriteAdd(0xA6);	//A6：关反显，A7：开反显。在不重写显示数据RAM内容的情况下反转显示开/关状态。
-
-	// OLED_WriteAdd(0xA8);	//设置多路复用比率。此命令将默认的64种多路传输模式切换到1到64之间的任意多路传输比率。双字节命令，设置完这条命令后需要写入比率数据。
-	// OLED_WriteAdd(0x3F);	//多路定量数据集（00-3F）。3F：64路多路传输比率。
-
-	// OLED_WriteAdd(0xD3);	//设置显示偏移模式。双字节命令，设置完这条命令后需要写入显示偏移模式数据。
-	// OLED_WriteAdd(0x00);	//偏移量（00-3F）。00：不偏移。
-
-	// OLED_WriteAdd(0xD5);	//设置显示时钟分频比/振荡器频率。双字节命令，设置完这条命令后需要写入显示时钟分频比/振荡器频率数据。
-	// OLED_WriteAdd(0x80);	//分频比/振荡器频率数据（00-FF）。0x80：分频比为1，振荡器频率为+15%
-
-	// OLED_WriteAdd(0xD9);	//设置预充电周期的持续时间。间隔以DCLK的个数计。POR是2个DCLKs。双字节命令，设置完这条命令后需要写入预充电周期的持续时间。
-	// OLED_WriteAdd(0xF1);	//周期持续时间（00-FF）。0xF1：预充电周期的持续时间为1个DCLK，掉电周期的持续时间为15个DCLK。
-
-	// OLED_WriteAdd(0xDA);	//设置公用焊盘硬件配置。此命令用于设置公共信号板配置（顺序或替代）以匹配OLED面板硬件布局。双字节命令，设置完这条命令后需要写入公用焊盘硬件配置。
-	// OLED_WriteAdd(0x12);	//顺序/替代模式设置（02-12）。0x02：顺序模式。0x12：替代模式。
-
-	// OLED_WriteAdd(0xDB);	//设置VCOM取消选择级别。此命令用于在取消选择阶段设置公共焊盘输出电压电平。双字节命令。
-	// OLED_WriteAdd(0x40);	//VCOM取消选择级别数据（00-FF）。
-
-	// OLED_WriteAdd(0xA4);	//关闭/打开整个显示。0xA4：正常显示。0xA5：整个显示。此命令的优先级高于正常/反向显示命令。
-	// OLED_WriteAdd(0xA6);
-
-	// OLED_WriteAdd(0xAF);	//开显示
-
-	// OLED_Clear();
-	// OLED_WriteAdd(0xb0); // 设置页
-	// OLED_WriteAdd(0x10); // 设置列的显示位置的高位
-	// OLED_WriteAdd(0x01); // 低位
-
-
-
+    OLED_WriteAdd(0xf8);//背压比设置
+    OLED_WriteAdd(0x00);//00--10
+	OLED_Clear();//清屏
 }
 
 // void OLED_Show_Number_16(uint8_t x,uint8_t  y,uint8_t  number )

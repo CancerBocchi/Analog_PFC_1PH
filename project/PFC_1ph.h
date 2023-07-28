@@ -26,7 +26,9 @@ extern Mode_Switch               Contrarian_Bridge_State;
 
 extern float  Internal_SineSignal;
 extern bool   SPLL_Flag;
+extern float  PF_theta;
 extern spwm   spwmmod;
+extern uint16_t  PF_angle;
 
 void Project_Init();
 bool Spll_Run(float Acwave);

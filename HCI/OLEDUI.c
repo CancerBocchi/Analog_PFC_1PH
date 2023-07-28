@@ -284,8 +284,8 @@ void flash()
     for(uint8_t i=0;i<8;i++)
     {
         OLED_WriteAdd(i+0xb0);//设置页地址（0~7）
-		OLED_WriteAdd(0x02);//设置显示位置—列低地址
-		OLED_WriteAdd(0x10);//设置显示位置—列高地址
+		OLED_WriteAdd(((0x00&0xf0)>>4)|0x10);//设置显示位置—列低地址
+		OLED_WriteAdd((0x00&0x0f)|0x00);//设置显示位置—列高地址
 
         for(uint8_t m=0;m<128;m++)
         {    

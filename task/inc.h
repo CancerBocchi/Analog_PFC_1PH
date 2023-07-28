@@ -8,6 +8,7 @@
 #include "arm_math.h"
 #include "hrtim.h"
 #include "adc.h"
+#include "tim.h"
 
 /*基本模块*/
 #include "mylib.h"
