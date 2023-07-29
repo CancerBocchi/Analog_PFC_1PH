@@ -6,11 +6,14 @@ spwm                      SPWM_Mode;
 
 System_Flag               System_State;
 Mode_Switch               Contrarian_Bridge_State;
+bool                      First_Run_Flag;
 
+uint16_t  PF_angle;
 bool      SPLL_Flag;
 float     Internal_SineSignal;
-uint16_t  PF_angle;
 float     PF_theta;
+float     Past_Volt;//用于过零比较
+
 
 
 void Project_Init()
@@ -30,14 +33,15 @@ void Project_Init()
     //开启外设
     HAL_HRTIM_WaveformCounterStart(&hhrtim1,HRTIM_TIMERID_TIMER_A);
     HAL_HRTIM_WaveformCounterStart(&hhrtim1,HRTIM_TIMERID_TIMER_B);
-    HAL_HRTIM_WaveformCounterStart_IT(&hhrtim1,HRTIM_TIMERID_MASTER);
+    HAL_HRTIM_WaveformCounterStart(&hhrtim1,HRTIM_TIMERID_MASTER);
     HAL_ADC_Start_DMA(&hadc1,(uint32_t*)ADC_Sample.ADC_Raw_Value,3);
     HAL_TIM_Base_Start(&htim1);
 
     //标志位初始化
     Contrarian_Bridge_State = OFF;
-    System_State = System_Init;
-    
+    System_State = System_Stop;
+    SPLL_Flag = SPLL_NO;
+    First_Run_Flag = RUN;
 }
 
 void InternalACGenerater()
@@ -66,3 +70,10 @@ void Ac_Analyser_Run(float i, float v)
     POWER_MEAS_SINE_ANALYZER_run(&AC_Analyzer);
 }
 
+void System_Stop_Program()
+{
+    Contrarian_Bridge_Switch(OFF);
+    System_State = System_Stop;
+    SPLL_Flag = SPLL_NO;
+    First_Run_Flag = STOP;
+}

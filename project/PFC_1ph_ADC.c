@@ -20,6 +20,7 @@ bool AC_Offset_Get()
         AC_Offset[0] = sum_v[0] / TSnum/6;
         AC_Offset[1] = sum_v[1] / TSnum/6;
         flag = true;
+        add_num = 0;
     }
     return flag;
 }
@@ -29,5 +30,6 @@ void ADC_Conversion()
     //TogglePin_C13;
     ADC_Sample.Bus_Volt    = (ADC_Sample.ADC_Raw_Value[0] - AC_Offset[0])*Kraw*Kac;
     ADC_Sample.Bus_Current = (ADC_Sample.ADC_Raw_Value[1] - AC_Offset[1])*Kraw*Kac;
+    
     //TogglePin_C13;
 }

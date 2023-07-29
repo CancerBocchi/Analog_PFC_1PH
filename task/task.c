@@ -4,7 +4,7 @@
 
 /*variable define*/
 // spwm SPWM1;
-spwm spwmmod;
+float theta;
 
 /*task init*/
 void Task_Init()
@@ -17,6 +17,7 @@ void Task_Init()
 void Task_Do()
 {
     OLED_Screen();
+
 }
 
 /*IT Function*/

@@ -14,18 +14,22 @@ void PFC_KeyboardControll()
                 case 1:
                     if(PF_angle < 90)
                         PF_angle += 1;
-                        C13_HIGH;
                     break;
                 case 2:
                     if(PF_angle < 90)
                         PF_angle -= 1;
-                        C13_LOW;
                     break;
                 case 3:
-
+                    if(System_State == System_Stop)
+                        System_State = System_Init;
+                    else if(System_State == System_Run)
+                        System_State = System_Stop;
                     break;
                 case 4:
-
+                    if(First_Run_Flag == STOP)
+                        First_Run_Flag = RUN;
+                    else if(First_Run_Flag == RUN)
+                        First_Run_Flag = STOP;
                     break;
                 case 5:
 
@@ -77,6 +81,8 @@ void AC_Lab1()
         HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,1);
     else
         HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,0);
+
+    SEGGER_RTT_printf(0,"%d,%d\n",FLOAT_PRINTF(SPLL_Data.theta),FLOAT_PRINTF(Internal_SineSignal));
 }
 
 void AC_Lab2()
@@ -114,11 +120,21 @@ void AC_Lab2()
 void AC_Lab3()
 {
     static int power_mea_flag;
-    PFC_KeyboardControll();
+
     //
     //open the high bridge
     //
-    Contrarian_Bridge_Switch(ON);
+    if(First_Run_Flag == RUN && SPLL_Flag == SPLL_OK)
+    {
+        if(ADC_Sample.Bus_Volt > 0.0f && Past_Volt < 0.0f)
+        {
+            Contrarian_Bridge_Switch(ON);
+        }
+    }
+    else if(First_Run_Flag == STOP)
+    {
+        Contrarian_Bridge_Switch(OFF);
+    }
     //
     //确认是否锁相成功
     //
@@ -127,8 +143,6 @@ void AC_Lab3()
     
     else
         SPLL_Flag = SPLL_NO;
-    
-    SEGGER_RTT_printf(0,"%d\n",FLOAT_PRINTF(ADC_Sample.Bus_Current));
 
     //
     //锁相成功后开启spwm并且开始测量各个参数
@@ -143,5 +157,8 @@ void AC_Lab3()
             power_mea_flag = 0;
         }
         power_mea_flag++;
+        C13_HIGH;
     }
+    C13_LOW;
+    Past_Volt = ADC_Sample.Bus_Volt;
 }

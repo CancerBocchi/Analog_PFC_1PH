@@ -7,7 +7,7 @@ void SPWM_Init(spwm* spwm_mode,float Sin_Fre,float PWM_Fre,bool timerswitch)
     spwm_mode->PWM_Fre = PWM_Fre;
     spwm_mode->SinWave_Fre = Sin_Fre;
     spwm_mode->Step_Raw = 2.0f*PI*spwm_mode->SinWave_Fre/spwm_mode->PWM_Fre;
-    spwm_mode->Modulation_Depth = 0.5f;
+    spwm_mode->Modulation_Depth = 0.8f;
     spwm_mode->MasterHandle = &hhrtim1.Instance->sMasterRegs;
     spwm_mode->Timer_Select = timerswitch;
 }

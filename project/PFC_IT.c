@@ -1,8 +1,10 @@
 #include "PFC_1ph.h"
 
-void HAL_HRTIM_RegistersUpdateCallback(HRTIM_HandleTypeDef * hhrtim,uint32_t TimerIdx)//周期回调
-{
-    //TogglePin_C13;
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)//adc转换完后进入中断
+{    
+    ADC_Conversion();
+    PFC_KeyboardControll();
     switch (System_State)
     {
     case System_Init:
@@ -12,13 +14,11 @@ void HAL_HRTIM_RegistersUpdateCallback(HRTIM_HandleTypeDef * hhrtim,uint32_t Tim
     
     case System_Run:
         AC_Lab3();
-        
+        break;
+
+    case System_Stop:
+        System_Stop_Program();
         break;
     }
-    //TogglePin_C13;
-}
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)//adc转换完后进入中断
-{
-    ADC_Conversion();
+    SEGGER_RTT_printf(0,"%d,%d\n",FLOAT_PRINTF(SPLL_Data.u_Q[0]),ADC_Sample.ADC_Raw_Value[0]);
 }
